@@ -1,5 +1,6 @@
 package net.ponvert.upparse.corpus;
 
+import java.io.Serializable;
 import java.util.*;
 
 import net.ponvert.upparse.util.*;
@@ -9,7 +10,8 @@ import net.ponvert.upparse.util.*;
  * 
  * @author eponvert@utexas.edu (Elias Ponvert)
  */
-public class SimpleBIOEncoder extends TagEncoder {
+public class SimpleBIOEncoder extends TagEncoder implements Serializable {
+  private static final long serialVersionUID = 1L;
 
   public static final int STOP_STATE = 0, B_STATE = 1, I_STATE = 2,
       O_STATE = 3;

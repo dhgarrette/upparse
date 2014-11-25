@@ -1,12 +1,14 @@
 package net.ponvert.upparse.corpus;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Simple alphabet data structure
  * @author eponvert@utexas.edu (Elias Ponvert)
  */
-public class Alpha {
+public class Alpha implements Serializable {
+  private static final long serialVersionUID = 1L;
   
   private final Map<String, Integer> stoi = new HashMap<String, Integer>(50000);
   private final List<String> itos = new ArrayList<String>();

@@ -2,13 +2,17 @@ package net.ponvert.upparse.model;
 
 import static java.lang.Math.*;
 import static java.util.Arrays.*;
+
+import java.io.Serializable;
+
 import net.ponvert.upparse.corpus.*;
 import net.ponvert.upparse.util.*;
 
 /**
  * @author eponvert@utexas.edu (Elias Ponvert)
  */
-public abstract class SequenceModel {
+public abstract class SequenceModel implements Serializable {
+  private static final long serialVersionUID = 1L;
 
   private final int[] orig;
   private final TagEncoder encoder;

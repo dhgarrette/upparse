@@ -7,7 +7,8 @@ import net.ponvert.upparse.corpus.*;
 /**
  * @author eponvert@utexas.edu (Elias Ponvert)
  */
-public class SequenceModelChunker {
+public class SequenceModelChunker implements Serializable {
+  private static final long serialVersionUID = 1L;
 
   private double lastPerplex = -1;
   private int currIter = 0;

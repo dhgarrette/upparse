@@ -229,7 +229,7 @@ public class ChunkedSegmentedCorpus implements Corpus {
   }
   
 
-  private void writeToWithPunc(BufferedWriter bw, String[][] textOutput) 
+  public void writeToWithPunc(BufferedWriter bw, String[][] textOutput) 
   throws IOException {
     GetString getString = GetString.altGetString(
         textOutput, toChunkedCorpus().getArrays(), alpha);

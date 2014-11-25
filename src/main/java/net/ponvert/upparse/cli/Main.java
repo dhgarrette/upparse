@@ -75,7 +75,7 @@ public class Main {
   private String outputString;
   private boolean outputPos = false;
 
-  private Main(final String[] args) throws CommandLineError, IOException,
+  public Main(final String[] args) throws CommandLineError, IOException,
       EvalError, EncoderError, CorpusError {
     int i = 0;
     String arg;
@@ -379,16 +379,21 @@ public class Main {
     return evalManager.getTestPos();
   }
 
+  public void trainChunker(final SequenceModelChunker model)
+      throws IOException, EvalError, ChunkerError, CorpusError {
+	while (model.anotherIteration()) {
+	  if (doContinuousEval)
+	    evalChunker(String.format("Iter-%d", model.getCurrentIter()),
+	      model.getCurrentChunker());
+	  model.updateWithEM(outputManager.getStatusStream());
+	}
+  }
+  
   private void chunkerEval(final SequenceModelChunker model)
       throws IOException, EvalError, ChunkerError, CorpusError {
-    while (model.anotherIteration()) {
-      if (doContinuousEval)
-        evalChunker(String.format("Iter-%d", model.getCurrentIter()),
-            model.getCurrentChunker());
-      model.updateWithEM(outputManager.getStatusStream());
-    }
+	trainChunker(model);
     evalChunker(String.format("Iter-%d", model.getCurrentIter()),
-        model.getCurrentChunker());
+      model.getCurrentChunker());
     writeOutput();
   }
 
@@ -490,9 +495,14 @@ public class Main {
         .toSimpleChunkedSegmentedCorpus();
   }
 
-  private void chunk() throws CommandLineError, IOException, EvalError,
+  public SequenceModelChunker getTrainableChunker() throws CommandLineError, IOException, EvalError,
+  	  ChunkerError, CorpusError, EncoderError, SequenceModelError {
+	return new SequenceModelChunker(getSequenceModel(), emdelta, iter);
+  }
+
+  private void chunkEval() throws CommandLineError, IOException, EvalError,
       ChunkerError, CorpusError, EncoderError, SequenceModelError {
-    chunkerEval(new SequenceModelChunker(getSequenceModel(), emdelta, iter));
+    chunkerEval(getTrainableChunker());
   }
 
   private void cclpEval() throws EvalError, IOException, CorpusError {
@@ -514,6 +524,10 @@ public class Main {
     corpus.writeTokenizedPlaintextTo(outputString);
   }
   
+  public StopSegmentCorpus getStopSegmentCorpus(String[] corpusString, CorpusType fileType, int numSents, int filter) throws IOException, CorpusError {
+	  return CorpusUtil.stopSegmentCorpus(alpha, corpusString, fileType, numSents, filter, noSeg, reverse);
+  }
+  
   public static void main(final String[] argv) {
     try {
       final Main prog = new Main(argv);
@@ -524,7 +538,7 @@ public class Main {
       }
 
       if (prog.action.equals(CHUNK_ACTION))
-        prog.chunk();
+        prog.chunkEval();
 
       else if (prog.action.equals(CCLPARSER_EVAL_ACTION))
         prog.cclpEval();
