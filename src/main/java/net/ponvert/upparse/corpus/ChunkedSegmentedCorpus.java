@@ -231,6 +231,11 @@ public class ChunkedSegmentedCorpus implements Corpus {
 
   public void writeToWithPunc(BufferedWriter bw, String[][] textOutput) 
   throws IOException {
+	writeToWithPunc(bw, textOutput, "(", ")");
+  }
+	  
+  public void writeToWithPunc(BufferedWriter bw, String[][] textOutput, String openChar, String closeChar) 
+  throws IOException {
     GetString getString = GetString.altGetString(
         textOutput, toChunkedCorpus().getArrays(), alpha);
     
@@ -239,13 +244,13 @@ public class ChunkedSegmentedCorpus implements Corpus {
       for (int seg = 0; seg < corpus[sent].length; seg++) {
         for (int[] chunk: corpus[sent][seg]) {
           if (chunk.length > 1) 
-            bw.write("(");
+            bw.write(openChar);
           for (int wrd = 0; wrd < chunk.length; wrd++) {
             bw.write(getString.getString(sent, chunkI, wrd));
             if (wrd < chunk.length - 1)
               bw.write(' ');
           }
-          bw.write(chunk.length > 1 ? ") " : " ");
+          bw.write(chunk.length > 1 ? closeChar + " " : " ");
           chunkI++;
         }
         bw.write(" ; ");
