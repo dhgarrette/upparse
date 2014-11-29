@@ -22,7 +22,7 @@ public class NullOutputManager extends OutputManager {
   public PrintStream getResultsStream() { return System.out; }
 
   @Override
-  public PrintStream getStatusStream() { return System.err; }
+  public PrintStream getStatusStream() { return System.out; }
   
   @Override
   public void closeAll() { }
